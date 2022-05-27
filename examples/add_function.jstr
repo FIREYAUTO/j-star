@@ -1,0 +1,19 @@
+$ add = <@TYPES.FUNCTION> {
+	$ parameters = <@TYPES.ARRAY> {
+		$ 0 = <@INTR.PARAMETER> {
+			$ name = <@TYPES.STRING> "a"
+			$ default = <@TYPES.NUMBER> 1
+		}
+		$ 1 = <@INTR.PARAMETER> {
+			$ name = <@TYPES.STRING> "a"
+			$ default = <@TYPES.NUMBER> 2
+		}
+	} 
+	$ body = <@INTR.BLOCK> {
+		return @a + @b
+	}
+}
+
+$ result = @add ( <@TYPES.NUMBER> 1, <@TYPES.NUMBER> 2 )
+
+@log ( @result )
