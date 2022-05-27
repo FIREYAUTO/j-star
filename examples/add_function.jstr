@@ -2,11 +2,11 @@ $ add = <@TYPES.FUNCTION> {
 	$ parameters = <@TYPES.ARRAY> {
 		$ 0 = <@INTR.PARAMETER> {
 			$ name = <@TYPES.STRING> "a"
-			$ default = <@TYPES.NUMBER> 1
+			$ default = <@TYPES.NUMBER> "1"
 		}
 		$ 1 = <@INTR.PARAMETER> {
 			$ name = <@TYPES.STRING> "a"
-			$ default = <@TYPES.NUMBER> 2
+			$ default = <@TYPES.NUMBER> "2"
 		}
 	} 
 	$ body = <@INTR.BLOCK> {
@@ -14,6 +14,6 @@ $ add = <@TYPES.FUNCTION> {
 	}
 }
 
-$ result = @add ( <@TYPES.NUMBER> 1, <@TYPES.NUMBER> 2 )
+$ result = @add ( <@TYPES.NUMBER> "1", <@TYPES.NUMBER> "2" )
 
 @log ( @result )
