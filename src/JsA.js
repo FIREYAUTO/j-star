@@ -140,6 +140,25 @@ const ASTClasses = {
 		],
 	},[ASTExpressions]),
 };
+
+//{{ AST Stack }}\\
+
+class ASTStack {
+	constructor(Tokens){
+		this.Tokens=Tokens,
+	}
+	Next(Amount=1){
+		return this.Token=this.Tokens[this.Position+=Amount];
+	}
+	ExpectNext(Token,Move=false){
+		let Next=this.Next();
+		if(!Move)this.Next(-1);
+		if(Next.Value!=Token){
+			//ERROR HERE
+		}
+	}
+}
+
 /*
 TODO: Make AST stack and all of the functions below
 	*CallASTList
