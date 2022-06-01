@@ -36,10 +36,10 @@ class ASTBase {
 		for(let k in Options)this[k]=Options[k];
 		for(let v of Lists)v.Add(this);
 	}
-	Generate(Stack){
+	Generate(Stack,...Extra){
 		let Node = new ASTNode(this.Type);
 		for(let Method of this.ParseTree){
-			let Returns = Method.Call(Stack);
+			let Returns = Method.Call(Stack,...Extra);
 			if(Method.Returns)
 				Node.Write(Method.Name,Returns);
 		}
@@ -211,13 +211,28 @@ class ASTStack {
 	}
 	CallASTList(List){
 		this.ErrorIfEOS();
+		let T=this.Token;
 		for(let x of List.List)
-			if(x.Check(this))return x.Generate(this);
+			if(x.Check(this,T))return x.Generate(this);
+	}
+	CallASTPriorityList(List,Priority=-1,Repeat=false,Value){
+		this.ErrorIfEOS();
+		let T=this.Token;
+		for(let x of List.List){
+			if(x.Priority<Priority)continue;
+			if(x.Check(this,T)){
+				let Result = x.Generate(this,Value,x.Priority);
+				if(Repeat&&!x.Stop){
+					this.Next();
+					return this.CallASTPriorityList(List,Result[2]||x.Priority,Repeat,Result[1]);
+				}
+			}
+		}
+		return Value;
 	}
 }
 
 /*
-TODO: Make AST stack and all of the functions below
-	*CallASTList
+TODO: Finish making all AST nodes, make code block generation function
 
 */
