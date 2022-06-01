@@ -146,15 +146,61 @@ const ASTClasses = {
 class ASTStack {
 	constructor(Tokens){
 		this.Tokens=Tokens,
+			this.Token=Tokens[0],
+			this.Positon=0,
+			this.TokensLength=Tokens.length;
 	}
 	Next(Amount=1){
 		return this.Token=this.Tokens[this.Position+=Amount];
 	}
+	IsEnd(){
+		return this.Position>=this.TokensLength;	
+	}
+	GetFT(Token){
+		if(this.IsEnd()&&!Token)return"end of script";
+		return `token ${Token.Value}`;
+	}
+	Error(Options){
+		if(!Options.End)Options.End=this.OpenStringStates[this.OpenStringStates.length-1]||" while parsing code";
+		return ErrorHandler.Error(Options);
+	}
+	ErrorIfEOS(Message){
+		if(this.IsEnd())
+			return this.Error({
+				Type:"Unexpected",
+				Arguments:["end of script"],
+				End:Message
+			});
+	}
 	ExpectNext(Token,Move=false){
 		let Next=this.Next();
+		this.ErrorIfEOS();
 		if(!Move)this.Next(-1);
 		if(Next.Value!=Token){
-			//ERROR HERE
+			this.Error({
+				Type:"ExpectedGot",
+				Arguments:[this.GetFT({Value:Token}),this.GetFT(Next)],
+			});
+		}
+	}
+	Expect(Token){
+		let Next=this.Token;
+		this.ErrorIfEOS();
+		if(Next.Value!=Token){
+			this.Error({
+				Type:"ExpectedGot",
+				Arguments:[this.GetFT({Value:Token}),this.GetFT(Next)],
+			});
+		}
+	}
+	ExpectType(Type){
+		let Next=this.Token;
+		this.ErrorIfEOS();
+		if(Next.Type!=Type){
+			this.Error({
+				Type:"ExpectedGot",
+				Arguments:[Type.toLowerCase(),this.GetFT(Next)],
+			});
 		}
 	}
 }
@@ -162,8 +208,5 @@ class ASTStack {
 /*
 TODO: Make AST stack and all of the functions below
 	*CallASTList
-	*ExpectType
-	*ExpectNext
-	*Next
 
 */
