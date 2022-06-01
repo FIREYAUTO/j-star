@@ -172,6 +172,12 @@ class ASTStack {
 				End:Message
 			});
 	}
+	CheckNext(Token,Move=false){
+		let Next=this.Next();
+		if(!Move)this.Next(-1);
+		if(Next&&Next.Value===Token)return true;
+		return false;
+	}
 	ExpectNext(Token,Move=false){
 		let Next=this.Next();
 		this.ErrorIfEOS();
@@ -202,6 +208,11 @@ class ASTStack {
 				Arguments:[Type.toLowerCase(),this.GetFT(Next)],
 			});
 		}
+	}
+	CallASTList(List){
+		this.ErrorIfEOS();
+		for(let x of List.List)
+			if(x.Check(this))return x.Generate(this);
 	}
 }
 
